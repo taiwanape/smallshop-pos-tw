@@ -1,8 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import PosPage from '../app/page';
+import PublicShowcase from '../components/public-showcase';
 import '../app/globals.css';
+import './showcase.css';
 
 const root = document.getElementById('root');
 
@@ -12,6 +13,6 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <PosPage />
+    <PublicShowcase />
   </StrictMode>,
 );

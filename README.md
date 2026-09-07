@@ -2,6 +2,14 @@
 
 為單櫃台小吃店設計的點餐產品展示。2026-09-07重新規劃為同生活圈、同店型的導入服務與產品驗證。這個獨立專案不讀取或修改既有「五結大腸麵線 POS」網站或資料。
 
+## 公開網站（不用登入，可直接分享）
+
+- [產品介紹首頁](https://taiwanape.github.io/smallshop-pos-tw/)
+- [直接操作點餐體驗](https://taiwanape.github.io/smallshop-pos-tw/#/demo)
+- [本次介面更新：v2026.09.07-3](docs/public-preview.md)
+
+這兩個網址都在 GitHub Pages，不需要 GitHub 或 ChatGPT 帳號。網站目前供產品評估，不收款、不接收真實營業訂單。
+
 ## MVP 功能
 
 - 大按鈕菜單、分類切換與加料快捷鍵
