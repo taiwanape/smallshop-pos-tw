@@ -42,6 +42,7 @@ GitHub Pages限制以其運行商業SaaS或主要促進商業交易的網站，�
 
 ## 專案文件
 
+- [下載第二版 Excel 企劃表](https://github.com/taiwanape/smallshop-pos-tw/raw/refs/heads/main/docs/business-plan-v2.xlsx)：含可修改的三情境、24 個月試算、90 天行動、實際收款／續繳紀錄與競品來源。
 - [第二版商業與產品企劃](docs/replan-v2.md)
 - [第一版企劃（歷史）](docs/business-plan.md)
 - [產品路線圖](docs/product-roadmap.md)
