@@ -15,6 +15,8 @@
 
 ## 本機執行
 
+公開展示：<https://taiwanape.github.io/smallshop-pos-tw/>
+
 需要 Node.js 22.13 以上與 pnpm。
 
 ```bash
