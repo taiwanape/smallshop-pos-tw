@@ -8,7 +8,7 @@ import { defineConfig } from 'vite';
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  root: path.resolve(projectRoot, 'pages'),
+  root: path.resolve(projectRoot, 'web-preview'),
   base: '/smallshop-pos-tw/',
   css: { postcss: { plugins: [tailwindcss()] } },
   plugins: [react()],

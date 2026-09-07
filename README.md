@@ -1,6 +1,6 @@
 # 小店快收 POS
 
-為台灣小吃店、攤商與 1–3 人餐飲店設計的單頁點餐工具。這個 repository 是獨立重寫的商業 MVP，不會讀取、修改或依賴既有的「五結大腸麵線 POS」網站或其訂單資料。
+為單櫃台小吃店設計的點餐產品展示。2026-09-07重新規劃為同生活圈、同店型的導入服務與產品驗證。這個獨立專案不讀取或修改既有「五結大腸麵線 POS」網站或資料。
 
 ## MVP 功能
 
@@ -11,7 +11,9 @@
 - 今日營收、客單價、熱銷品項與歷史訂單
 - 菜單價格與販售狀態管理
 - CSV 匯出
-- 本機資料持久化（localStorage）
+- IndexedDB交易、跨分頁防覆蓋、結帳重試保護
+- 完整JSON備份與非破壞性匯入、作廢留痕
+- 整數金額驗證、第1版展示資料遷移（保留原始資料）
 
 ## 本機執行
 
@@ -32,18 +34,23 @@ pnpm build
 
 ## 資料與產品界線
 
-目前版本是可操作的商業驗證 MVP。資料只保存在使用者當下的瀏覽器，不適合直接用於多門市、多人共用或需要法規留存的正式營運。
+目前是產品展示，請勿輸入真實營業資料。尚未完成雲端備份、離線重啟、現金日結、完整退款與設備驗收。IndexedDB仍是瀏覽器本機資料，不是雲端帳本。
+
+GitHub Pages限制以其運行商業SaaS或主要促進商業交易的網站，因此此網址僅供展示。正式營業另行部署至允許商用的服務，詳見[官方限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。
 
 正式 SaaS 版本應加入帳號與門市隔離、加密雲端備份、離線佇列與同步、權限、稽核紀錄、資料匯入／匯出，以及透過合格服務商整合電子發票與支付。
 
 ## 專案文件
 
-- [商業企劃](docs/business-plan.md)
+- [第二版商業與產品企劃](docs/replan-v2.md)
+- [第一版企劃（歷史）](docs/business-plan.md)
 - [產品路線圖](docs/product-roadmap.md)
 
 ## 技術
 
 React 19、TypeScript、Vinext/Vite、Tailwind CSS、Shadcn primitives。
+
+驗證：`pnpm test`、`pnpm typecheck`、`pnpm build`、`pnpm build:pages`。Node交易測試使用fake-indexeddb，不能代替實體設備、離線或商用驗收。
 
 ## 授權
 
