@@ -1,6 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  focusSection,
+  useSectionVisible,
+} from '@/components/use-section-visible';
 import { PetArt } from '@/components/pet-art';
 import {
   ArrowRight,
@@ -10,6 +14,8 @@ import {
   ChevronRight,
   Download,
   History,
+  Hand,
+  Handshake,
   LayoutGrid,
   Leaf,
   LoaderCircle,
@@ -125,10 +131,10 @@ const sampleNames = [
   '小羽',
 ];
 const reasons = [
-  { text: '認真參與', delta: 1, icon: '🙋' },
-  { text: '完成任務', delta: 2, icon: '✅' },
-  { text: '幫助同學', delta: 3, icon: '🤝' },
-  { text: '主動挑戰', delta: 5, icon: '🌟' },
+  { text: '認真參與', delta: 1, icon: Hand },
+  { text: '完成任務', delta: 2, icon: Check },
+  { text: '幫助同學', delta: 3, icon: Handshake },
+  { text: '主動挑戰', delta: 5, icon: Star },
 ];
 
 export default function ClassroomApp() {
@@ -165,6 +171,10 @@ export default function ClassroomApp() {
     state.classes.find((c) => c.id === active) ?? state.classes[0];
   const students = current?.students ?? [];
   const currentId = current?.id ?? '';
+  const actionsVisible = useSectionVisible(
+    'class-actions',
+    tab === 'students' && !!currentId,
+  );
   const visible = useMemo(
     () =>
       students.filter(
@@ -724,7 +734,12 @@ export default function ClassroomApp() {
                     </div>
                   )}
                 </section>
-                <aside className="class-action-panel" id="class-actions">
+                <aside
+                  className="class-action-panel"
+                  id="class-actions"
+                  tabIndex={-1}
+                  aria-label="學生加分與餵食"
+                >
                   <div className="class-action-heading">
                     <div>
                       <span className="suite-eyebrow">一起進步</span>
@@ -747,7 +762,7 @@ export default function ClassroomApp() {
                           onClick={() => void act('score', r.delta, r.text)}
                         >
                           <span>
-                            {r.icon} {r.text}
+                            <r.icon aria-hidden="true" /> {r.text}
                           </span>
                           <b>+{r.delta}</b>
                         </button>
@@ -948,17 +963,16 @@ export default function ClassroomApp() {
           if (file) void importFile(file);
         }}
       />
-      <button
-        className="class-mobile-actions"
-        disabled={!selectedStudents.length}
-        onClick={() =>
-          document
-            .getElementById('class-actions')
-            ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }
-      >
-        <Star />替 {selectedStudents.length} 位學生加分 / 餵食
-      </button>
+      {tab === 'students' && selectedStudents.length > 0 && !actionsVisible && (
+        <button
+          className="class-mobile-actions"
+          aria-controls="class-actions"
+          onClick={() => focusSection('class-actions')}
+        >
+          <Star aria-hidden="true" />替 {selectedStudents.length} 位學生加分 /
+          餵食
+        </button>
+      )}
       <footer className="class-footer">
         <span>
           <span />

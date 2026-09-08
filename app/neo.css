@@ -2927,3 +2927,168 @@
     grid-row: 1/span 2;
   }
 }
+
+/* Shared mobile navigation and shortcuts for the existing workspaces. */
+.suite-nav-short,
+.pos-mobile-cart {
+  display: none;
+}
+.class-reasons button > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.class-reasons button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+#pos-current-order,
+#class-actions {
+  scroll-margin-top: 18px;
+}
+#pos-current-order:focus-visible,
+#class-actions:focus-visible {
+  outline: 3px solid #7152a0;
+  outline-offset: 4px;
+}
+.suite-nav a:focus-visible,
+.app-shell button:focus-visible,
+.class-app button:focus-visible {
+  outline: 3px solid #7152a0;
+  outline-offset: 4px;
+}
+.app-shell .cart-line-copy span {
+  color: #627883;
+}
+.app-shell .stepper button {
+  color: #8c432b;
+}
+@media (max-width: 680px) {
+  .suite-nav nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    border-radius: 25px;
+  }
+  .suite-nav nav a {
+    min-width: 0;
+    min-height: 56px;
+    padding: 8px 4px;
+    gap: 5px;
+    flex-direction: column;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .suite-nav nav a svg {
+    width: 19px;
+    height: 19px;
+  }
+  .suite-nav-label {
+    display: none;
+  }
+  .suite-nav-short {
+    display: inline;
+  }
+  .app-shell .workspace {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+  .app-shell .cart-list {
+    padding-inline: 16px;
+  }
+  .app-shell .cart-line {
+    column-gap: 8px;
+  }
+  .app-shell .cart-line-copy strong {
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+  .app-shell .stepper {
+    gap: 2px;
+    padding: 2px;
+  }
+  .app-shell .stepper button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .app-shell .stepper strong {
+    min-width: 18px;
+    font-size: 0.875rem;
+  }
+  .app-shell .stepper svg {
+    width: 18px;
+    height: 18px;
+  }
+  .app-shell .dining-switch button,
+  .app-shell .category-strip button,
+  .app-shell .addon-button,
+  .app-shell .icon-action,
+  .class-quick-actions button,
+  .class-reasons button,
+  .class-tabbar [data-slot='tabs-trigger'] {
+    min-height: 44px;
+  }
+  .class-tabbar [data-slot='tabs-list'] {
+    height: auto;
+  }
+  .class-tabbar [data-slot='tabs-trigger'] {
+    height: auto;
+  }
+  .pos-mobile-cart {
+    display: flex;
+    position: fixed;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    width: calc(100% - 32px);
+    max-width: 600px;
+    min-height: 60px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid #293b45;
+    border-radius: 22px;
+    background: #f26442;
+    color: #231e1b;
+    box-shadow: 4px 4px 0 #293b45;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  .pos-mobile-cart-count {
+    background: #fffaf0;
+    border: 1.5px solid #293b45;
+    border-radius: 24px;
+    padding: 6px 9px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .pos-mobile-cart > strong {
+    font-size: 1.15rem;
+  }
+  .pos-mobile-cart > span:last-child {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: auto;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+  .pos-mobile-cart svg {
+    width: 18px;
+    height: 18px;
+  }
+  .class-mobile-actions:not(:disabled) {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    min-height: 52px;
+    font-size: 0.875rem;
+  }
+}
+@media print {
+  .pos-mobile-cart {
+    display: none !important;
+  }
+}

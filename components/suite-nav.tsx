@@ -26,29 +26,41 @@ export function SuiteNav({
             id: 'home',
             href: toolHref('home'),
             label: '所有工具',
+            mobileLabel: '首頁',
             icon: Blocks,
           },
           {
             id: 'classroom',
             href: toolHref('classroom'),
             label: '班級小夥伴',
+            mobileLabel: '班級',
             icon: GraduationCap,
           },
           {
             id: 'learn',
             href: toolHref('learn'),
             label: '英文學習',
+            mobileLabel: '學英文',
             icon: BookOpen,
           },
-          { id: 'pos', href: toolHref('pos'), label: '小店快收', icon: Store },
-        ].map(({ id, href, label, icon: Icon }) => (
+          {
+            id: 'pos',
+            href: toolHref('pos'),
+            label: '小店快收',
+            mobileLabel: '點餐',
+            icon: Store,
+          },
+        ].map(({ id, href, label, mobileLabel, icon: Icon }) => (
           <a
             href={href}
             key={id}
             aria-current={active === id ? 'page' : undefined}
           >
             <Icon aria-hidden="true" />
-            <span>{label}</span>
+            <span className="suite-nav-label">{label}</span>
+            <span className="suite-nav-short">
+              {mobileLabel}
+            </span>
           </a>
         ))}
       </nav>

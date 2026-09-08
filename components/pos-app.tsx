@@ -5,6 +5,10 @@ import { createPortal, flushSync } from 'react-dom';
 import { WUJIE_MENU } from '@/lib/wujie-menu';
 import { LEGACY_SAMPLE_MENU } from '@/lib/legacy-sample-menu';
 import { suiteAsset } from '@/lib/suite-paths';
+import {
+  focusSection,
+  useSectionVisible,
+} from '@/components/use-section-visible';
 import { amount, csvCell, parseBackup, taipeiDay } from '@/lib/pos-domain';
 import type {
   Backup,
@@ -131,6 +135,7 @@ export default function Home() {
   const busyRef = useRef(false);
   const checkoutId = useRef<string | null>(null);
   const channelRef = useRef<BroadcastChannel | null>(null);
+  const cartVisible = useSectionVisible('pos-current-order');
 
   async function refresh() {
     if (!dbRef.current) return;
@@ -672,6 +677,7 @@ export default function Home() {
               <button
                 key={name}
                 className={name === category ? 'active' : ''}
+                aria-pressed={name === category}
                 onClick={() => setCategory(name)}
               >
                 {name}
@@ -732,7 +738,12 @@ export default function Home() {
           </div>
         </div>
 
-        <aside className="cart-panel">
+        <aside
+          className="cart-panel"
+          id="pos-current-order"
+          tabIndex={-1}
+          aria-label="目前訂單與結帳"
+        >
           <div className="cart-title-row">
             <div>
               <span className="eyebrow">目前訂單</span>
@@ -743,6 +754,7 @@ export default function Home() {
                 <button
                   key={type}
                   className={diningType === type ? 'active' : ''}
+                  aria-pressed={diningType === type}
                   onClick={() => setDiningType(type)}
                 >
                   {type}
@@ -755,7 +767,7 @@ export default function Home() {
             {cart.length === 0 ? (
               <div className="empty-cart">
                 <Utensils aria-hidden="true" />
-                <strong>點一下左側餐點開始</strong>
+                <strong>選擇餐點，開始點單</strong>
                 <span>相同品項會自動合併數量</span>
               </div>
             ) : (
@@ -855,6 +867,22 @@ export default function Home() {
           </div>
         </aside>
       </section>
+
+      {cart.length > 0 && !cartVisible && (
+        <button
+          className="pos-mobile-cart"
+          aria-controls="pos-current-order"
+          onClick={() => focusSection('pos-current-order')}
+        >
+          <span className="pos-mobile-cart-count" aria-live="polite">
+            {cart.reduce((sum, line) => sum + line.quantity, 0)} 份
+          </span>
+          <strong>{money(total)}</strong>
+          <span>
+            查看訂單 <ChevronRight aria-hidden="true" />
+          </span>
+        </button>
+      )}
 
       <Dialog open={reportOpen} onOpenChange={setReportOpen}>
         <DialogContent className="report-dialog">
