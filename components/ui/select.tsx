@@ -1,12 +1,31 @@
 'use client';
 
 import * as React from 'react';
+import { WorkspaceActive } from '@/components/workspace-active';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 
 import { cn } from '@/lib/utils';
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from 'lucide-react';
 
-const Select = SelectPrimitive.Root;
+function Select<Value, Multiple extends boolean | undefined = false>({
+  open,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: SelectPrimitive.Root.Props<Value, Multiple>) {
+  const active = React.useContext(WorkspaceActive);
+  const [localOpen, setLocalOpen] = React.useState(defaultOpen ?? false);
+  return (
+    <SelectPrimitive.Root
+      {...props}
+      open={active && (open ?? localOpen)}
+      onOpenChange={(next, details) => {
+        setLocalOpen(next);
+        onOpenChange?.(next, details);
+      }}
+    />
+  );
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (

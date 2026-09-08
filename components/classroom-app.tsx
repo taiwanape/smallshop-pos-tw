@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { PetArt } from '@/components/pet-art';
 import {
   ArrowRight,
   BookOpen,
@@ -404,7 +405,7 @@ export default function ClassroomApp() {
       ) : !current ? (
         <div className="class-onboard">
           <span className="class-welcome-pet" aria-hidden="true">
-            🦊
+            <PetArt pet={0} />
           </span>
           <span className="suite-eyebrow">每個班級，都值得一群小夥伴。</span>
           <h2>從你的第一個班級開始</h2>
@@ -664,7 +665,7 @@ export default function ClassroomApp() {
                                 )
                               }
                             >
-                              <span aria-hidden="true">{PETS[p.pet]}</span>
+                              <PetArt pet={p.pet} />
                               <b>Lv. {level.level}</b>
                             </button>
                             <button
@@ -723,7 +724,7 @@ export default function ClassroomApp() {
                     </div>
                   )}
                 </section>
-                <aside className="class-action-panel">
+                <aside className="class-action-panel" id="class-actions">
                   <div className="class-action-heading">
                     <div>
                       <span className="suite-eyebrow">一起進步</span>
@@ -834,7 +835,7 @@ export default function ClassroomApp() {
                       .map((p, i) => (
                         <li key={p.id}>
                           <span className="class-rank">{i + 1}</span>
-                          <span className="class-rank-pet">{PETS[p.pet]}</span>
+                          <PetArt className="class-rank-pet" pet={p.pet} />
                           <div>
                             <strong>{p.name}</strong>
                             <small>
@@ -947,6 +948,17 @@ export default function ClassroomApp() {
           if (file) void importFile(file);
         }}
       />
+      <button
+        className="class-mobile-actions"
+        disabled={!selectedStudents.length}
+        onClick={() =>
+          document
+            .getElementById('class-actions')
+            ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      >
+        <Star />替 {selectedStudents.length} 位學生加分 / 餵食
+      </button>
       <footer className="class-footer">
         <span>
           <span />
@@ -1128,7 +1140,7 @@ export default function ClassroomApp() {
                     aria-pressed={edit.pet === i}
                     onClick={() => setEdit({ ...edit, pet: i })}
                   >
-                    {pet}
+                    <PetArt pet={i} />
                   </button>
                 ))}
               </div>
@@ -1329,7 +1341,7 @@ export default function ClassroomApp() {
           )}
           {drawn && (
             <>
-              <span className="class-draw-pet">{PETS[drawn.pet]}</span>
+              <PetArt className="class-draw-pet" pet={drawn.pet} />
               <h2>{drawn.name}</h2>
               <div className="class-dialog-actions">
                 <button className="class-btn" onClick={pick}>

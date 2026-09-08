@@ -1,4 +1,4 @@
-import { cp, readFile, access, mkdir, writeFile } from 'node:fs/promises';
+import { cp, readFile, access, mkdir, writeFile, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -6,6 +6,11 @@ const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const source = resolve(root, '../lexiharbor/dist');
 const target = resolve(root, 'public/lexiharbor');
 await access(resolve(source, 'index.html'));
+// This directory contains only generated exports. Verify its absolute boundary
+// before replacing it so stale hashed bundles never accumulate in releases.
+if (target !== resolve(root, 'public', 'lexiharbor'))
+  throw new Error('Invalid export target');
+await rm(target, { recursive: true, force: true });
 await cp(source, target, { recursive: true });
 const commit = execFileSync(
   'git',

@@ -1,78 +1,52 @@
-# 日常工具所（含小店快收 POS）
+# 日常工具所｜DAILY TOOLS
 
-2026-09-08 已整合為同一個 Sites 網站：[開啟日常工具所](https://smallshop-pos-tw.taiwanape1.chatgpt.site)。目前維持原本的私人存取範圍。
+[開啟公開網站](https://taiwanape.github.io/smallshop-pos-tw/) · 不用 GitHub 或 ChatGPT 帳號，手機與電腦都能使用。
 
-- `/classroom`：影片概念的班級寵物工具，包含積分、兌換食物、餵養成長、名單、分組、點名、撤銷與 JSON／CSV 備份。
-- `/learn`：LexiHarbor 原本的完整英文閱讀、字卡、複習、字典與語音功能。
-- `/pos`：原本的小店快收操作介面，保留原有帳本及資料格式。有未結帳點單時，切換工具會觸發瀏覽器離開提醒。
+2026-09-08 已將三套工具整合到 GitHub Pages，使用同一個導覽與新的視覺設計。
 
-`pnpm dev`、`pnpm build` 建置整合站；`pnpm build:pages` 仍建置下方原本獨立的 POS 公開展示。新工具資料僅保存在使用者目前的瀏覽器，未提供雲端同步或商用收費。
+- [班級小夥伴](https://taiwanape.github.io/smallshop-pos-tw/#/classroom)：名單、分組、點名、積分、兌換食物、餵養成長、排行榜、撤銷與 JSON／CSV 備份。依據使用者提供的 0908.mp4 實作。
+- [英文學習室](https://taiwanape.github.io/smallshop-pos-tw/#/learn)：完整 LexiHarbor 閱讀、字卡、複習、字典及 106 段精選 AI 語音。
+- [小店快收](https://taiwanape.github.io/smallshop-pos-tw/#/pos)：點餐、內用／外帶、現金找零、取餐號、收據列印、日報、菜單編輯、訂單作廢與備份。舊的 `#/demo` 網址仍能使用。
 
-分析依據、資料搬移與維護方式請參閱 [影片與整合說明](docs/VIDEO_0908_AND_SUITE.md)。
+## 設計與原菜單
 
-## 原 POS 專案說明
+參照使用者提供的三張介面設計：奶油底色、黃／粉／綠色塊、黑框與膠囊導覽，點餐頁採藍灰與橘色操作按鈕。GPT ImageGen 產生八隻寵物、麵線與書本角色；[插圖與完整提示詞](docs/design-v2-prompts.md)。英文介面的顏色、卡片與書本角色也一併更新。
 
-為單櫃台小吃店設計的點餐產品展示。2026-09-07重新規劃為同生活圈、同店型的導入服務與產品驗證。這個獨立專案不讀取或修改既有「五結大腸麵線 POS」網站或資料。
+點餐預設採用[原五結點餐工具](https://taiwanape.github.io/Pos/)的 21 個品項與原價，四種煎類皆可加蛋 +10。只自動升級從未修改的舊示範菜單；自訂菜單保留。需要手動套用時，開啟「菜單」→「套用五結菜單」→「套用至草稿」→「儲存菜單」。歷史訂單名稱、價格、號碼不會重寫。
 
-## 公開網站（不用登入，可直接分享）
+## 資料保存
 
-- [產品介紹首頁](https://taiwanape.github.io/smallshop-pos-tw/)
-- [直接操作點餐體驗](https://taiwanape.github.io/smallshop-pos-tw/#/demo)
-- [本次介面更新：v2026.09.07-3](docs/public-preview.md)
+資料存在目前瀏覽器，不會跨裝置同步；分享網址不會分享班級、字卡或訂單。請定期匯出備份。切換上方工具導覽會保留未結帳購物車、付款輸入與文章草稿；重新整理或關閉分頁不保證保留未儲存內容。
 
-這兩個網址都在 GitHub Pages，不需要 GitHub 或 ChatGPT 帳號。網站目前供產品評估，不收款、不接收真實營業訂單。
+原始五結網站的 `wujie_*` 資料未被修改。已在小店快收 GitHub 網址儲存的帳本會繼續使用；先前私人 Sites 網站與 GitHub 是不同來源，需要各工具的匯出／匯入功能搬移資料。
 
-## MVP 功能
+目前為公開試用，沒有雲端帳號、支付串接或收費機制。
 
-- 大按鈕菜單、分類切換與加料快捷鍵
-- 內用／外帶、數量調整、收現與找零
-- 完成訂單後產生取餐號
-- 瀏覽器列印收據
-- 今日營收、客單價、熱銷品項與歷史訂單
-- 菜單價格與販售狀態管理
-- CSV 匯出
-- IndexedDB交易、跨分頁防覆蓋、結帳重試保護
-- 完整JSON備份與非破壞性匯入、作廢留痕
-- 整數金額驗證、第1版展示資料遷移（保留原始資料）
+## 開發與發布
 
-## 本機執行
+需要 Node.js 22.13 以上及 pnpm。
 
-公開展示：<https://taiwanape.github.io/smallshop-pos-tw/>
-
-需要 Node.js 22.13 以上與 pnpm。
-
-```bash
+```sh
 pnpm install
 pnpm dev
+pnpm test
+pnpm typecheck
+pnpm build:pages
 ```
 
-正式建置：
+`pnpm build:pages` 產生 `dist-pages`，包含所有工具、插圖、英文內容及語音。發布程式只重寫英文 app 的本機 `/lexiharbor` 路徑至 `/smallshop-pos-tw/lexiharbor`，保留來源及授權連結；檢查入口資源與語音數量，建立 `.nojekyll` 和 `release.json`。推送 `main` 後，GitHub Actions 自動測試並部署 Pages。
 
-```bash
-pnpm build
-```
+原 Sites 的 `pnpm dev` / `pnpm build` 路由也保留，相同元件使用 `/classroom`、`/learn`、`/pos`。
 
-## 資料與產品界線
+英文 app 原始碼位於相鄰 `../lexiharbor`。在該專案執行 `node scripts/build-web.mjs` 後回來執行 `node scripts/sync-lexiharbor.mjs`，可同步完整靜態輸出及 [來源版本](docs/lexiharbor-source.json)。
 
-目前是產品展示，請勿輸入真實營業資料。尚未完成雲端備份、離線重啟、現金日結、完整退款與設備驗收。IndexedDB仍是瀏覽器本機資料，不是雲端帳本。
+25 項自動測試涵蓋班級積分交易、餵養與撤銷、POS 併發結帳及備份、原菜單核對、舊資料升級，以及 GitHub 子路徑處理。測試使用 fake-indexeddb；不等於實體收銀設備驗收。
 
-GitHub Pages限制以其運行商業SaaS或主要促進商業交易的網站，因此此網址僅供展示。正式營業另行部署至允許商用的服務，詳見[官方限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。
+## 相關文件
 
-正式 SaaS 版本應加入帳號與門市隔離、加密雲端備份、離線佇列與同步、權限、稽核紀錄、資料匯入／匯出，以及透過合格服務商整合電子發票與支付。
-
-## 專案文件
-
-- [下載第二版 Excel 企劃表](https://github.com/taiwanape/smallshop-pos-tw/raw/refs/heads/main/docs/business-plan-v2.xlsx)：含可修改的三情境、24 個月試算、90 天行動、實際收款／續繳紀錄與競品來源。
+- [影片分析與最初整合紀錄](docs/VIDEO_0908_AND_SUITE.md)
 - [第二版商業與產品企劃](docs/replan-v2.md)
-- [第一版企劃（歷史）](docs/business-plan.md)
+- [可修改的 Excel 企劃表](docs/business-plan-v2.xlsx)
 - [產品路線圖](docs/product-roadmap.md)
 
-## 技術
-
-React 19、TypeScript、Vinext/Vite、Tailwind CSS、Shadcn primitives。
-
-驗證：`pnpm test`、`pnpm typecheck`、`pnpm build`、`pnpm build:pages`。Node交易測試使用fake-indexeddb，不能代替實體設備、離線或商用驗收。
-
-## 授權
-
-目前未提供開源授權。所有權與後續授權方式由 repository 擁有者決定。
+目前未提供開源授權；所有權與後續授權由 repository 擁有者決定。

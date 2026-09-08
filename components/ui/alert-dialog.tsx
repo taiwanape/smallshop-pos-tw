@@ -1,13 +1,21 @@
 'use client';
 
 import * as React from 'react';
+import { WorkspaceActive } from '@/components/workspace-active';
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react/alert-dialog';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
-  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
+  const active = React.useContext(WorkspaceActive);
+  return (
+    <AlertDialogPrimitive.Root
+      data-slot="alert-dialog"
+      {...props}
+      open={active ? props.open : false}
+    />
+  );
 }
 
 function AlertDialogTrigger({ ...props }: AlertDialogPrimitive.Trigger.Props) {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './suite.css';
+import './neo.css';
 
 export const metadata: Metadata = {
   title: '日常工具所｜班級、英文學習與小店點餐',

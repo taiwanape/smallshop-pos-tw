@@ -1,9 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import PublicShowcase from '../components/public-showcase';
+import SuiteApp from './suite-app';
 import '../app/globals.css';
-import './showcase.css';
+import '../app/suite.css';
+import '../app/neo.css';
 
 const root = document.getElementById('root');
 
@@ -13,6 +14,6 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <PublicShowcase />
+    <SuiteApp />
   </StrictMode>,
 );

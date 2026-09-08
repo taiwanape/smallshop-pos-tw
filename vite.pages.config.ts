@@ -10,6 +10,11 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   root: path.resolve(projectRoot, 'web-preview'),
   base: '/smallshop-pos-tw/',
+  publicDir: path.resolve(projectRoot, 'public'),
+  define: {
+    __SUITE_STATIC__: 'true',
+    __SUITE_BASE__: JSON.stringify('/smallshop-pos-tw/'),
+  },
   css: { postcss: { plugins: [tailwindcss()] } },
   plugins: [react()],
   resolve: {

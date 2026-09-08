@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { WorkspaceActive } from '@/components/workspace-active';
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 
 import { cn } from '@/lib/utils';
@@ -8,7 +9,14 @@ import { Button } from '@/components/ui/button';
 import { XIcon } from 'lucide-react';
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+  const active = React.useContext(WorkspaceActive);
+  return (
+    <DialogPrimitive.Root
+      data-slot="dialog"
+      {...props}
+      open={active ? props.open : false}
+    />
+  );
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
