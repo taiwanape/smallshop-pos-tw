@@ -342,7 +342,6 @@ export default function ClassroomApp() {
       setMessage('已匯入為新班級，原有資料完整保留。');
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
-      setPendingImport(null);
     } finally {
       inFlight.current = false;
       setBusy(false);
