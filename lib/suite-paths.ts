@@ -6,7 +6,7 @@ export const STATIC_SUITE =
   typeof __SUITE_STATIC__ !== 'undefined' && __SUITE_STATIC__;
 export const SUITE_BASE =
   typeof __SUITE_BASE__ !== 'undefined' ? __SUITE_BASE__ : '/';
-export const SUITE_VERSION = '2026.09.08-design4';
+export const SUITE_VERSION = '2026.09.08-hosting1';
 export const toolHref = (route: ToolRoute) =>
   STATIC_SUITE
     ? `#/${route === 'home' ? '' : route}`

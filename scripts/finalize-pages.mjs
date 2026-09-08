@@ -1,11 +1,13 @@
-import { readFile, writeFile, readdir, access } from 'node:fs/promises';
+import { readFile, writeFile, readdir, access, mkdir } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { rebaseLexi, PAGES_BASE } from './pages-paths.mjs';
+import { rebaseLexi, staticTarget } from './pages-paths.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const output = resolve(root, 'dist-pages');
+const targetName = process.argv[2] ?? 'pages';
+const target = staticTarget(targetName);
+const output = resolve(root, target.output);
 async function filesAt(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const groups = await Promise.all(
@@ -22,10 +24,15 @@ for (const file of files.filter((file) =>
   ['.html', '.js'].includes(extname(file)),
 )) {
   const original = await readFile(file, 'utf8');
-  const rebased = rebaseLexi(original);
+  const rebased = rebaseLexi(original, target.base);
   if (rebased !== original) await writeFile(file, rebased);
-  if (/(['"])\/lexiharbor(?=\/|['"])/.test(rebased))
+  if (target.base !== '/' && /(['"])\/lexiharbor(?=\/|['"])/.test(rebased))
     throw new Error(`Unrebased path: ${file}`);
+  if (
+    target.base === '/' &&
+    /(['"])\/smallshop-pos-tw\/lexiharbor(?=\/|['"])/.test(rebased)
+  )
+    throw new Error(`Unexpected GitHub path in root build: ${file}`);
 }
 for (const name of [
   'index.html',
@@ -39,9 +46,9 @@ for (const name of [
 const html = await readFile(resolve(output, 'lexiharbor/index.html'), 'utf8');
 for (const match of html.matchAll(/(?:src|href)=["']([^"']+)["']/g)) {
   const url = match[1];
-  if (url.startsWith(PAGES_BASE))
+  if (url.startsWith(target.base) && !url.startsWith('//'))
     await access(
-      resolve(output, decodeURIComponent(url.slice(PAGES_BASE.length))),
+      resolve(output, decodeURIComponent(url.slice(target.base.length))),
     );
   else if (url.startsWith('/') && !url.startsWith('//'))
     throw new Error(`Incorrect Pages asset: ${url}`);
@@ -52,6 +59,23 @@ const versionSource = await readFile(
 );
 const version = versionSource.match(/SUITE_VERSION\s*=\s*['"]([^'"]+)/)?.[1];
 if (!version) throw new Error('Missing suite version');
+const entryFile = resolve(output, 'index.html');
+const entryHtml = (await readFile(entryFile, 'utf8'))
+  .replace(/(<meta\s+property="og:url"\s+content=")[^"]+/, `$1${target.url}`)
+  .replace(/(<meta\s+name="app-version"\s+content=")[^"]+/, `$1${version}`);
+await writeFile(entryFile, entryHtml);
+// Preserve bookmarks from the previous server-rendered Sites version.
+if (targetName === 'site') {
+  for (const route of ['classroom', 'learn', 'pos', 'demo']) {
+    const destination = `/#/${route === 'demo' ? 'pos' : route}`;
+    const directory = resolve(output, route);
+    await mkdir(directory, { recursive: true });
+    await writeFile(
+      resolve(directory, 'index.html'),
+      `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${destination}"><title>日常工具所</title></head><body><a href="${destination}">開啟日常工具所</a></body></html>`,
+    );
+  }
+}
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], {
   cwd: root,
   encoding: 'utf8',
@@ -62,9 +86,12 @@ if (audioCount < 106)
 await writeFile(resolve(output, '.nojekyll'), '');
 await writeFile(
   resolve(output, 'release.json'),
-  JSON.stringify({ version, commit, audioCount, base: PAGES_BASE }, null, 2) +
-    '\n',
+  JSON.stringify(
+    { version, commit, audioCount, base: target.base, url: target.url },
+    null,
+    2,
+  ) + '\n',
 );
 console.log(
-  `Pages ready: ${version}; ${audioCount} audio clips; all entry assets verified.`,
+  `${targetName} ready: ${version}; ${audioCount} audio clips; all entry assets verified.`,
 );

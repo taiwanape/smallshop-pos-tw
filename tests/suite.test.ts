@@ -14,7 +14,7 @@ import {
 } from '../lib/pos-store.ts';
 import { makeOrder } from '../lib/pos-domain.ts';
 import type { Backup, CartLine } from '../lib/pos-domain.ts';
-import { rebaseLexi } from '../scripts/pages-paths.mjs';
+import { rebaseLexi, staticTarget } from '../scripts/pages-paths.mjs';
 
 test('公開網址能直接開啟三個工具，且保留舊 demo 網址', () => {
   assert.equal(parseToolRoute(''), 'home');
@@ -35,6 +35,15 @@ test('英文 app 子路徑包含 runtime base、圖示及字型，但不改作�
     'src="/smallshop-pos-tw/lexiharbor/_expo/a.js";baseUrl:"/smallshop-pos-tw/lexiharbor";u=\'/smallshop-pos-tw/lexiharbor/assets/a.png\';font="/smallshop-pos-tw/lexiharbor/a.ttf";source="https://github.com/taiwanape/lexiharbor"',
   );
   assert.equal(rebaseLexi(output), output);
+});
+
+test('新主機使用根路徑，英文圖片、語音與外部來源網址保持正確', () => {
+  const input =
+    'src="/lexiharbor/_expo/a.js";font="/lexiharbor/a.ttf";audio="/lexiharbor/assets/voice.wav";source="https://github.com/taiwanape/lexiharbor"';
+  assert.equal(rebaseLexi(input, staticTarget('site').base), input);
+  assert.equal(staticTarget('site').output, 'out');
+  assert.equal(staticTarget().base, '/smallshop-pos-tw/');
+  assert.throws(() => staticTarget('../elsewhere'), /Unknown static target/);
 });
 
 test('五結原工具的 21 品項、原價及四種煎類加蛋完整保留', () => {

@@ -170,6 +170,52 @@ export default function Home() {
             </p>
           </div>
         </div>
+        <details className="neo-migration" id="move-data">
+          <summary>
+            新的分享網址與資料搬移 <ArrowRight aria-hidden="true" />
+          </summary>
+          <div className="neo-migration-content">
+            <p>
+              日常工具所的新家已準備好。
+              <a
+                href="https://smallshop-pos-tw.taiwanape1.chatgpt.site/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                開啟新網站 <ArrowUpRight aria-hidden="true" />
+              </a>
+              分享這個網址，朋友就能直接使用三個工具。
+            </p>
+            <p>
+              曾在舊網址使用過？請先用原本的瀏覽器匯出，再到新網址匯入。換網址不會自動帶入紀錄；搬移完成前請保留備份與舊資料。
+            </p>
+            <ol>
+              <li>
+                <strong>班級小夥伴：</strong>
+                舊站「管理與備份」→「下載全部班級備份」；新站「已有備份？匯入班級」或「管理與備份」→「匯入備份為新班級」。
+              </li>
+              <li>
+                <strong>英文學習室：</strong>
+                舊站「設定」分別匯出「閱讀與字卡」及「詞庫收藏」兩份備份；新站在相同位置貼上各自備份內容。閱讀會合併，詞庫收藏會取代新站現有收藏。
+              </li>
+              <li>
+                <strong>小店快收：</strong>舊站「完整備份」下載
+                JSON；新站「匯入備份」。請在新站尚未修改菜單、開始記單前搬移，才能一併還原原菜單；CSV
+                不適合還原完整帳本。
+              </li>
+            </ol>
+            <p>
+              完成後請核對班級人數、文章與字卡、菜單與訂單，再繼續使用。尚未儲存的文章草稿與購物車不包含在備份內。
+            </p>
+            <a
+              href="https://taiwanape.github.io/smallshop-pos-tw/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              開啟原 GitHub 網址，匯出舊資料 <ArrowUpRight aria-hidden="true" />
+            </a>
+          </div>
+        </details>
         <footer className="neo-footer">
           <a
             href="https://github.com/taiwanape/smallshop-pos-tw"

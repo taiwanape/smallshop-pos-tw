@@ -451,6 +451,58 @@
   font-size: 0.78rem;
   color: #797271;
 }
+.neo-migration {
+  margin: 0 0 28px;
+  border: 1.5px solid #29252f;
+  border-radius: 18px;
+  background: #fffdf5;
+  overflow: hidden;
+}
+.neo-migration summary {
+  padding: 18px 22px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+}
+.neo-migration summary > svg {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.neo-migration[open] summary {
+  border-bottom: 1px solid #29252f;
+  background: #f9e47b;
+}
+.neo-migration-content {
+  padding: 4px 22px 22px;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.neo-migration-content ol {
+  padding-left: 24px;
+}
+.neo-migration-content li + li {
+  margin-top: 12px;
+}
+.neo-migration-content a {
+  display: inline;
+  color: #55388a;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.neo-migration-content a > svg {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+.neo-migration summary:focus-visible,
+.neo-migration a:focus-visible {
+  outline: 3px solid #55388a;
+  outline-offset: -3px;
+}
 .neo-footer {
   border-top: 1.5px solid #1d1d1f;
   padding: 22px 0;
