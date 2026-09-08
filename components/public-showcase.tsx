@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { PUBLIC_PREVIEW_URL, PUBLIC_PREVIEW_VERSION, previewRoute, sampleMenu, sampleTotal } from '@/lib/public-preview';
 import type { SampleItemId, SampleQuantities } from '@/lib/public-preview';
 
-const PosDemo = lazy(() => import('@/app/page'));
+const PosDemo = lazy(() => import('@/components/pos-app'));
 const github = 'https://github.com/taiwanape/smallshop-pos-tw';
 
 const questions = [
