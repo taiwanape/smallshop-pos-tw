@@ -55,16 +55,18 @@ assert.ok(
   html.includes(expected.version) && html.includes('/assets/index-'),
   'Homepage is not the expected app',
 );
+const sharingMeta = [...html.matchAll(/<meta\b[^>]*>/gi)]
+  .map(([tag]) => tag)
+  .find((tag) => /\bproperty\s*=\s*(['"])og:url\1/i.test(tag));
 if (expected.url) {
-  assert.ok(
-    html.includes(`<meta property="og:url" content="${expected.url}"`),
+  const sharingUrl = sharingMeta?.match(/\bcontent\s*=\s*(['"])(.*?)\1/i)?.[2];
+  assert.equal(
+    sharingUrl,
+    expected.url,
     'Homepage sharing metadata does not match the deployment URL',
   );
 } else {
-  assert.ok(
-    !html.includes('property="og:url"'),
-    'Unset URL must not be guessed',
-  );
+  assert.equal(sharingMeta, undefined, 'Unset URL must not be guessed');
 }
 const healthResponse = await request('/api/health');
 assert.equal(healthResponse.status, 200);
