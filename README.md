@@ -1,12 +1,12 @@
 # 日常工具所｜DAILY TOOLS
 
-[開啟公開網站](https://smallshop-pos-tw.taiwanape1.chatgpt.site/) · 不用 GitHub 或 ChatGPT 帳號，手機與電腦都能使用。
+[開啟公開網站](https://daily-tools.taiwanape.workers.dev/) · 不用 GitHub、Cloudflare 或 ChatGPT 帳號，手機與電腦都能使用。
 
-2026-09-08 三套工具整合在同一個網站。對外主機使用 ChatGPT Sites，程式碼保留在 GitHub；[原 GitHub Pages](https://taiwanape.github.io/smallshop-pos-tw/) 保留免費展示與舊資料匯出。首頁的「新的分享網址與資料搬移」可查看操作步驟；完整說明見[主機與資料搬移](docs/hosting-and-migration.md)。
+2026-09-09 三套工具已整合至 Cloudflare Workers 的公開網站，程式碼保留在 GitHub，`main` 更新後由 Cloudflare 自動測試、建置及發布。使用目前帳號的 Workers 免費方案與 `workers.dev` 網址。[原 Sites](https://smallshop-pos-tw.taiwanape1.chatgpt.site/) 和 [原 GitHub Pages](https://taiwanape.github.io/smallshop-pos-tw/) 保留舊資料匯出入口；首頁的「新的分享網址與資料搬移」可查看操作步驟，完整說明見[主機與資料搬移](docs/hosting-and-migration.md)。
 
-- [班級小夥伴](https://smallshop-pos-tw.taiwanape1.chatgpt.site/#/classroom)：名單、分組、點名、積分、兌換食物、餵養成長、排行榜、撤銷與 JSON／CSV 備份。依據使用者提供的 0908.mp4 實作。
-- [英文學習室](https://smallshop-pos-tw.taiwanape1.chatgpt.site/#/learn)：完整 LexiHarbor 閱讀、字卡、複習、字典及 106 段精選 AI 語音。
-- [小店快收](https://smallshop-pos-tw.taiwanape1.chatgpt.site/#/pos)：點餐、內用／外帶、現金找零、取餐號、收據列印、日報、菜單編輯、訂單作廢與備份。舊的 `#/demo` 網址仍能使用。
+- [班級小夥伴](https://daily-tools.taiwanape.workers.dev/#/classroom)：名單、分組、點名、積分、兌換食物、餵養成長、排行榜、撤銷與 JSON／CSV 備份。依據使用者提供的 0908.mp4 實作。
+- [英文學習室](https://daily-tools.taiwanape.workers.dev/#/learn)：完整 LexiHarbor 閱讀、字卡、複習、字典及 106 段精選 AI 語音。
+- [小店快收](https://daily-tools.taiwanape.workers.dev/#/pos)：點餐、內用／外帶、現金找零、取餐號、收據列印、日報、菜單編輯、訂單作廢與備份。舊的 `#/demo` 網址仍能使用。
 
 ## 設計與原菜單
 
@@ -24,13 +24,13 @@
 
 資料存在目前瀏覽器，不會跨裝置同步；分享網址不會分享班級、字卡或訂單。請定期匯出備份。切換上方工具導覽會保留未結帳購物車、付款輸入與文章草稿；重新整理或關閉分頁不保證保留未儲存內容。
 
-原始五結網站的 `wujie_*` 資料未被修改。已在 GitHub 網址儲存的紀錄仍留在舊站；Sites 與 GitHub 是不同來源，需要各工具的匯出／匯入功能搬移資料。英文包含閱讀與詞庫收藏兩份備份；POS 請使用完整 JSON 備份，於新站開始記單前搬移。
+原始五結網站的 `wujie_*` 資料未被修改。Cloudflare、Sites 與 GitHub Pages 是三個不同來源，舊紀錄仍在原本的瀏覽器與網址。請回到實際保存資料的舊站匯出，再到 Cloudflare 新站手動匯入。英文包含閱讀與詞庫收藏兩份備份；POS 請使用完整 JSON 備份，於新站修改菜單或開始記單前搬移。
 
 目前為公開試用，沒有雲端帳號、支付串接或收費機制。
 
 ## 開發與發布
 
-2026-09-09 依 What’Sub 的公開架構證據，新增可獨立部署至使用者 Cloudflare 帳號的 Workers 版本：網站與 API 同網域、GitHub 連動建置、相容原三工具。對方的 Cloudflare DNS／代理可確認，但原站主機及資料庫品牌未公開。[查核與部署說明](docs/whatsub-architecture.md)。新主機尚待 Cloudflare 帳號登入與發布，現有 Sites 網址維持使用；會員、雲端資料與收款仍未啟用。
+本專案參照 What’Sub 公開可確認的前端／API 分層方式，選用自己的 Cloudflare Workers 主機。對方使用 Cloudflare DNS／代理可確認，但原站主機及資料庫品牌未公開，不能據此認定對方使用 Workers。[查核與部署說明](docs/whatsub-architecture.md)。目前只完成主機與 API 入口；會員、雲端同步及收款仍未實作。
 
 需要 Node.js 22.13 以上及 pnpm。
 
@@ -39,17 +39,21 @@ pnpm install
 pnpm dev
 pnpm test
 pnpm typecheck
-pnpm build:site
-pnpm build:pages
 pnpm build:cloudflare
 pnpm check:cloudflare
+pnpm build:site
+pnpm build:pages
 ```
+
+主要發布流程是 **GitHub `main` → Cloudflare 執行測試、型別檢查及 `pnpm build:cloudflare` → `pnpm deploy:cloudflare`**。根路徑網站產物為 `dist-cloudflare`，包含三個工具、插圖與 106 段語音。Cloudflare 建置變數 `PUBLIC_SITE_URL` 使用 `https://daily-tools.taiwanape.workers.dev/`；GitHub Actions 另外檢查建置與 Wrangler dry-run，但不負責 Cloudflare 正式發布。
+
+`release.json` 記錄來源 commit、版本、分享網址及路徑。從相同來源版本建置後，可執行 `node scripts/verify-cloudflare.mjs https://daily-tools.taiwanape.workers.dev/` 核對線上版本與資源。Cloudflare 管理入口為 [Dashboard](https://dash.cloudflare.com/) → Workers & Pages → `daily-tools`。
 
 `pnpm build:pages` 產生 `dist-pages`，包含所有工具、插圖、英文內容及語音。發布程式只重寫英文 app 的本機 `/lexiharbor` 路徑至 `/smallshop-pos-tw/lexiharbor`，保留來源及授權連結；檢查入口資源與語音數量，建立 `.nojekyll` 和 `release.json`。推送 `main` 後，GitHub Actions 自動測試並部署 Pages。
 
-`pnpm build:site` 產生根路徑版本 `out`，包含相同工具、插圖與 106 段語音。CI 會檢查並保留 `daily-tools-site` 產物；Sites 發布仍需透過 Sites 的保存版本／發布流程，不會因 GitHub 推送就自動更新。`release.json` 記錄來源版本、網址及路徑。
+`pnpm build:site` 產生原 Sites 使用的根路徑版本 `out`。CI 會檢查並保留 `daily-tools-site` 產物；原 Sites 的公開版本仍需透過 Sites 保存版本／發布流程更新，不會因 GitHub 推送就自動更新。
 
-原 `pnpm dev` / `pnpm build` 的 Vinext 路由保留供後端開發。現行 Sites 使用靜態根路徑版本，三個工具都沿用 `#/classroom`、`#/learn`、`#/pos`。
+原 `pnpm dev` / `pnpm build` 的 Vinext 路由保留供後端開發，不是 Cloudflare 的正式建置命令。Cloudflare 與原 Sites 的工具沿用 `#/classroom`、`#/learn`、`#/pos`，並保留 `/classroom`、`/learn`、`/pos`、`/demo` 舊路徑轉接。
 
 英文 app 原始碼位於相鄰 `../lexiharbor`。在該專案執行 `node scripts/build-web.mjs` 後回來執行 `node scripts/sync-lexiharbor.mjs`，可同步完整靜態輸出及 [來源版本](docs/lexiharbor-source.json)。
 

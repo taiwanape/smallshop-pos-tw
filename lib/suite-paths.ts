@@ -7,11 +7,11 @@ export const STATIC_SUITE =
   typeof __SUITE_STATIC__ !== 'undefined' && __SUITE_STATIC__;
 export const SUITE_BASE =
   typeof __SUITE_BASE__ !== 'undefined' ? __SUITE_BASE__ : '/';
-export const SUITE_VERSION = '2026.09.09-architecture1';
+export const SUITE_VERSION = '2026.09.09-cloudflare1';
 export const SUITE_PUBLIC_URL =
   typeof __SUITE_PUBLIC_URL__ !== 'undefined'
     ? __SUITE_PUBLIC_URL__
-    : 'https://smallshop-pos-tw.taiwanape1.chatgpt.site/';
+    : 'https://daily-tools.taiwanape.workers.dev/';
 export const toolHref = (route: ToolRoute) =>
   STATIC_SUITE
     ? `#/${route === 'home' ? '' : route}`

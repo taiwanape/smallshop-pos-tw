@@ -20,7 +20,7 @@ export function staticConfig(targetName: 'pages' | 'site' | 'cloudflare') {
       __SUITE_PUBLIC_URL__: JSON.stringify(
         targetName === 'cloudflare'
           ? target.url
-          : 'https://smallshop-pos-tw.taiwanape1.chatgpt.site/',
+          : 'https://daily-tools.taiwanape.workers.dev/',
       ),
     },
     css: { postcss: { plugins: [tailwindcss()] } },
