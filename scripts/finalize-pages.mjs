@@ -37,6 +37,7 @@ for (const file of files.filter((file) =>
 for (const name of [
   'index.html',
   'lexiharbor/index.html',
+  'design/daily-tools-comic.webp',
   'design/pet-atlas.png',
   'design/noodle-mascot.png',
   'design/reading-mascot.png',

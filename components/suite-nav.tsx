@@ -1,63 +1,56 @@
-import { Blocks, BookOpen, GraduationCap, Store } from 'lucide-react';
+'use client';
+import { useId, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import { toolHref } from '@/lib/suite-paths';
 import { MemberButton } from '@/components/member-account';
-
 export function SuiteNav({
   active,
 }: {
   active: 'home' | 'classroom' | 'learn' | 'pos';
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const navigationId = useId();
   return (
-    <header className="suite-nav">
-      <a className="suite-brand" href={toolHref('home')}>
-        <Blocks aria-hidden="true" />
-        <span>
-          日常工具所<small>GOOD TOOLS. GOOD DAYS.</small>
-        </span>
+    <header className="suite-nav reference-nav">
+      <a
+        className="suite-brand"
+        href={toolHref('home')}
+        aria-label="日常工具所首頁"
+      >
+        daily<span className="wordmark-dot">.</span>tools
       </a>
-      <nav aria-label="工具導覽">
+      <nav
+        id={navigationId}
+        className={expanded ? 'is-expanded' : ''}
+        aria-label="工具導覽"
+      >
         {[
-          {
-            id: 'home',
-            href: toolHref('home'),
-            label: '所有工具',
-            mobileLabel: '首頁',
-            icon: Blocks,
-          },
-          {
-            id: 'classroom',
-            href: toolHref('classroom'),
-            label: '班級小夥伴',
-            mobileLabel: '班級',
-            icon: GraduationCap,
-          },
-          {
-            id: 'learn',
-            href: toolHref('learn'),
-            label: '英文學習',
-            mobileLabel: '學英文',
-            icon: BookOpen,
-          },
-          {
-            id: 'pos',
-            href: toolHref('pos'),
-            label: '小店快收',
-            mobileLabel: '點餐',
-            icon: Store,
-          },
-        ].map(({ id, href, label, mobileLabel, icon: Icon }) => (
+          { id: 'home' as const, label: '首頁' },
+          { id: 'classroom' as const, label: '班級小夥伴' },
+          { id: 'learn' as const, label: '英文學習' },
+          { id: 'pos' as const, label: '小店快收' },
+        ].map((item) => (
           <a
-            href={href}
-            key={id}
-            aria-current={active === id ? 'page' : undefined}
+            href={toolHref(item.id)}
+            key={item.id}
+            aria-current={active === item.id ? 'page' : undefined}
+            onClick={() => setExpanded(false)}
           >
-            <Icon aria-hidden="true" />
-            <span className="suite-nav-label">{label}</span>
-            <span className="suite-nav-short">{mobileLabel}</span>
+            {item.label}
           </a>
         ))}
       </nav>
       <MemberButton />
+      <button
+        className="suite-menu-toggle"
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+        aria-controls={navigationId}
+        aria-label={expanded ? '關閉導覽' : '開啟導覽'}
+      >
+        {expanded ? <X /> : <Menu />}
+      </button>
     </header>
   );
 }
