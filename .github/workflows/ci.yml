@@ -19,8 +19,15 @@ jobs:
       - run: pnpm test
       - run: pnpm typecheck
       - run: pnpm build:site
+      - run: pnpm build:cloudflare
+      - run: pnpm check:cloudflare
       - uses: actions/upload-artifact@v4
         with:
           name: daily-tools-site
           path: out
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daily-tools-cloudflare
+          path: dist-cloudflare
           retention-days: 7

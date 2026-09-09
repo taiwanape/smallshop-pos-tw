@@ -1,5 +1,7 @@
 # 日常工具所：網站主機與資料搬移
 
+2026-09-09 補充：下列 Sites 網址是目前已上線的入口。依 What’Sub 分層做法新增的 Cloudflare Workers 主機版本尚待帳號登入與發布，請見[架構與部署說明](whatsub-architecture.md)。未取得並驗證新網址前不改變對外入口；日後搬往 Cloudflare 時，Sites 與 GitHub Pages 都是可能的舊資料來源，應回到實際保存紀錄的那個網址匯出。
+
 ## 網站放在哪裡
 
 - 對外入口：<https://smallshop-pos-tw.taiwanape1.chatgpt.site/>

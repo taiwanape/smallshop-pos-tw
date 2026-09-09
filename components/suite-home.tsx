@@ -10,7 +10,12 @@ import {
 } from 'lucide-react';
 import { SuiteNav } from '@/components/suite-nav';
 import { PetArt } from '@/components/pet-art';
-import { toolHref, suiteAsset, SUITE_VERSION } from '@/lib/suite-paths';
+import {
+  toolHref,
+  suiteAsset,
+  SUITE_VERSION,
+  SUITE_PUBLIC_URL,
+} from '@/lib/suite-paths';
 
 export default function Home() {
   return (
@@ -178,7 +183,7 @@ export default function Home() {
             <p>
               日常工具所的新家已準備好。
               <a
-                href="https://smallshop-pos-tw.taiwanape1.chatgpt.site/"
+                href={SUITE_PUBLIC_URL ?? '/'}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -214,6 +219,17 @@ export default function Home() {
             >
               開啟原 GitHub 網址，匯出舊資料 <ArrowUpRight aria-hidden="true" />
             </a>
+            <p>
+              <a
+                href="https://smallshop-pos-tw.taiwanape1.chatgpt.site/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                開啟原 Sites 網址，匯出舊資料{' '}
+                <ArrowUpRight aria-hidden="true" />
+              </a>
+              。請選擇當初保存紀錄的網址；兩邊的資料各自獨立。
+            </p>
           </div>
         </details>
         <footer className="neo-footer">

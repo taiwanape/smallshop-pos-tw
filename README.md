@@ -30,6 +30,8 @@
 
 ## 開發與發布
 
+2026-09-09 依 What’Sub 的公開架構證據，新增可獨立部署至使用者 Cloudflare 帳號的 Workers 版本：網站與 API 同網域、GitHub 連動建置、相容原三工具。對方的 Cloudflare DNS／代理可確認，但原站主機及資料庫品牌未公開。[查核與部署說明](docs/whatsub-architecture.md)。新主機尚待 Cloudflare 帳號登入與發布，現有 Sites 網址維持使用；會員、雲端資料與收款仍未啟用。
+
 需要 Node.js 22.13 以上及 pnpm。
 
 ```sh
@@ -39,6 +41,8 @@ pnpm test
 pnpm typecheck
 pnpm build:site
 pnpm build:pages
+pnpm build:cloudflare
+pnpm check:cloudflare
 ```
 
 `pnpm build:pages` 產生 `dist-pages`，包含所有工具、插圖、英文內容及語音。發布程式只重寫英文 app 的本機 `/lexiharbor` 路徑至 `/smallshop-pos-tw/lexiharbor`，保留來源及授權連結；檢查入口資源與語音數量，建立 `.nojekyll` 和 `release.json`。推送 `main` 後，GitHub Actions 自動測試並部署 Pages。
@@ -49,7 +53,7 @@ pnpm build:pages
 
 英文 app 原始碼位於相鄰 `../lexiharbor`。在該專案執行 `node scripts/build-web.mjs` 後回來執行 `node scripts/sync-lexiharbor.mjs`，可同步完整靜態輸出及 [來源版本](docs/lexiharbor-source.json)。
 
-26 項自動測試涵蓋班級積分交易、餵養與撤銷、POS 併發結帳及備份、原菜單核對、舊資料升級，以及 GitHub 子路徑與新主機根路徑處理。測試使用 fake-indexeddb；不等於實體收銀設備驗收。
+29 項自動測試涵蓋班級積分交易、餵養與撤銷、POS 併發結帳及備份、原菜單核對、舊資料升級、GitHub 子路徑與新主機根路徑、API 分流及部署網址驗證。測試使用 fake-indexeddb；不等於實體收銀設備驗收。
 
 ## 相關文件
 

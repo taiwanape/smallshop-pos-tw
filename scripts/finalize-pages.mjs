@@ -60,12 +60,22 @@ const versionSource = await readFile(
 const version = versionSource.match(/SUITE_VERSION\s*=\s*['"]([^'"]+)/)?.[1];
 if (!version) throw new Error('Missing suite version');
 const entryFile = resolve(output, 'index.html');
-const entryHtml = (await readFile(entryFile, 'utf8'))
-  .replace(/(<meta\s+property="og:url"\s+content=")[^"]+/, `$1${target.url}`)
-  .replace(/(<meta\s+name="app-version"\s+content=")[^"]+/, `$1${version}`);
+let entryHtml = (await readFile(entryFile, 'utf8')).replace(
+  /(<meta\s+name="app-version"\s+content=")[^"]+/,
+  `$1${version}`,
+);
+entryHtml = target.url
+  ? entryHtml.replace(
+      /(<meta\s+property="og:url"\s+content=")[^"]+/,
+      `$1${target.url}`,
+    )
+  : entryHtml.replace(
+      /\s*<meta\s+property="og:url"\s+content="[^"]+"\s*\/?\s*>/,
+      '',
+    );
 await writeFile(entryFile, entryHtml);
 // Preserve bookmarks from the previous server-rendered Sites version.
-if (targetName === 'site') {
+if (target.base === '/') {
   for (const route of ['classroom', 'learn', 'pos', 'demo']) {
     const destination = `/#/${route === 'demo' ? 'pos' : route}`;
     const directory = resolve(output, route);
@@ -75,6 +85,30 @@ if (targetName === 'site') {
       `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${destination}"><title>日常工具所</title></head><body><a href="${destination}">開啟日常工具所</a></body></html>`,
     );
   }
+}
+if (targetName === 'cloudflare') {
+  // Keep the embedded Lexi app, runtime styles, audio and fonts working.
+  await writeFile(
+    resolve(output, '_headers'),
+    `/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: frame-ancestors 'self'; object-src 'none'; base-uri 'self'
+  X-Frame-Options: SAMEORIGIN
+
+/
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/release.json
+  Cache-Control: no-store
+
+/lexiharbor/*
+  Cache-Control: no-cache
+`,
+  );
 }
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], {
   cwd: root,
