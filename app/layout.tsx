@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { AccountProvider } from '@/components/member-account';
 import './globals.css';
 import './suite.css';
 import './neo.css';
@@ -13,7 +14,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-Hant-TW">
-      <body>{children}</body>
+      <body>
+        <AccountProvider>{children}</AccountProvider>
+      </body>
     </html>
   );
 }

@@ -1,11 +1,6 @@
-import {
-  ArrowUpRight,
-  Blocks,
-  BookOpen,
-  GraduationCap,
-  Store,
-} from 'lucide-react';
-import { toolHref, SUITE_VERSION } from '@/lib/suite-paths';
+import { Blocks, BookOpen, GraduationCap, Store } from 'lucide-react';
+import { toolHref } from '@/lib/suite-paths';
+import { MemberButton } from '@/components/member-account';
 
 export function SuiteNav({
   active,
@@ -58,15 +53,11 @@ export function SuiteNav({
           >
             <Icon aria-hidden="true" />
             <span className="suite-nav-label">{label}</span>
-            <span className="suite-nav-short">
-              {mobileLabel}
-            </span>
+            <span className="suite-nav-short">{mobileLabel}</span>
           </a>
         ))}
       </nav>
-      <span className="suite-local" title={SUITE_VERSION}>
-        OPEN & PLAY <ArrowUpRight />
-      </span>
+      <MemberButton />
     </header>
   );
 }

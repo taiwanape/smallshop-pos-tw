@@ -80,8 +80,17 @@ assert.equal(health.version, expected.version);
 assert.equal(health.service, 'daily-tools');
 assert.equal(health.status, 'ok');
 assert.equal(health.storage, 'browser-local');
-assert.equal(health.accounts, false);
+assert.equal(health.accounts, process.argv.includes('--expect-auth'));
 assert.equal(health.billing, false);
+const memberSession = await request('/api/auth/session');
+assert.equal(memberSession.status, health.accounts ? 200 : 503);
+assert.equal(memberSession.headers.get('cache-control'), 'no-store');
+if (health.accounts) {
+  assert.equal((await memberSession.json()).user, null);
+  const rejected = await request('/api/auth/config', { method: 'POST', headers: { origin: 'https://untrusted.example', 'content-type': 'application/json' }, body: '{}' });
+  assert.equal(rejected.status, 403);
+}
+assert.equal((await request('/privacy.html')).status, 200);
 for (const path of ['/api', '/api/not-implemented']) {
   const response = await request(path);
   assert.equal(response.status, 404);

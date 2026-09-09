@@ -2,7 +2,7 @@
 
 [開啟公開網站](https://daily-tools.taiwanape.workers.dev/) · 不用 GitHub、Cloudflare 或 ChatGPT 帳號，手機與電腦都能使用。
 
-2026-09-09 三套工具已整合至 Cloudflare Workers 的公開網站，程式碼保留在 GitHub，`main` 更新後由 Cloudflare 自動測試、建置及發布。使用目前帳號的 Workers 免費方案與 `workers.dev` 網址。[原 Sites](https://smallshop-pos-tw.taiwanape1.chatgpt.site/) 和 [原 GitHub Pages](https://taiwanape.github.io/smallshop-pos-tw/) 保留舊資料匯出入口；首頁的「新的分享網址與資料搬移」可查看操作步驟，完整說明見[主機與資料搬移](docs/hosting-and-migration.md)。
+三套工具整合在同一個 Cloudflare Workers 網站，程式碼保留在 GitHub，main 更新後自動測試、建置及發布。原 Sites 與 GitHub Pages 只提供轉址，不再提供另一份工具介面。
 
 - [班級小夥伴](https://daily-tools.taiwanape.workers.dev/#/classroom)：名單、分組、點名、積分、兌換食物、餵養成長、排行榜、撤銷與 JSON／CSV 備份。依據使用者提供的 0908.mp4 實作。
 - [英文學習室](https://daily-tools.taiwanape.workers.dev/#/learn)：完整 LexiHarbor 閱讀、字卡、複習、字典及 106 段精選 AI 語音。
@@ -24,13 +24,13 @@
 
 資料存在目前瀏覽器，不會跨裝置同步；分享網址不會分享班級、字卡或訂單。請定期匯出備份。切換上方工具導覽會保留未結帳購物車、付款輸入與文章草稿；重新整理或關閉分頁不保證保留未儲存內容。
 
-原始五結網站的 `wujie_*` 資料未被修改。Cloudflare、Sites 與 GitHub Pages 是三個不同來源，舊紀錄仍在原本的瀏覽器與網址。請回到實際保存資料的舊站匯出，再到 Cloudflare 新站手動匯入。英文包含閱讀與詞庫收藏兩份備份；POS 請使用完整 JSON 備份，於新站修改菜單或開始記單前搬移。
+工具資料按瀏覽器保存，使用同一瀏覽器的人會共用。Google 會員登入、登出或切換帳號，都不會切換、清除或同步工具資料；共用裝置請使用各自的瀏覽器設定檔。既有本機資料和 Git 歷史不會因撤下舊網站而刪除。
 
-目前為公開試用，沒有雲端帳號、支付串接或收費機制。
+Google 登入首次建立會員，再次登入辨識同一會員。會員姓名、電子郵件與 Google 識別碼保存在 Cloudflare D1；工具資料仍在本機。目前沒有支付串接、訂閱或跨裝置同步。詳見 [會員設定](docs/member-auth.md) 與 [隱私說明](https://daily-tools.taiwanape.workers.dev/privacy.html)。
 
 ## 開發與發布
 
-本專案參照 What’Sub 公開可確認的前端／API 分層方式，選用自己的 Cloudflare Workers 主機。對方使用 Cloudflare DNS／代理可確認，但原站主機及資料庫品牌未公開，不能據此認定對方使用 Workers。[查核與部署說明](docs/whatsub-architecture.md)。目前只完成主機與 API 入口；會員、雲端同步及收款仍未實作。
+本專案參照 What’Sub 公開可確認的前端／API 分層方式，選用自己的 Cloudflare Workers 主機。對方使用 Cloudflare DNS／代理可確認，但原站主機及資料庫品牌未公開，不能據此認定對方使用 Workers。[查核與部署說明](docs/whatsub-architecture.md)。會員 API 使用 Google Identity Services 與 Cloudflare D1，工具雲端同步及收款另待開發。
 
 需要 Node.js 22.13 以上及 pnpm。
 
@@ -49,15 +49,15 @@ pnpm build:pages
 
 `release.json` 記錄來源 commit、版本、分享網址及路徑。從相同來源版本建置後，可執行 `node scripts/verify-cloudflare.mjs https://daily-tools.taiwanape.workers.dev/` 核對線上版本與資源。Cloudflare 管理入口為 [Dashboard](https://dash.cloudflare.com/) → Workers & Pages → `daily-tools`。
 
-`pnpm build:pages` 產生 `dist-pages`，包含所有工具、插圖、英文內容及語音。發布程式只重寫英文 app 的本機 `/lexiharbor` 路徑至 `/smallshop-pos-tw/lexiharbor`，保留來源及授權連結；檢查入口資源與語音數量，建立 `.nojekyll` 和 `release.json`。推送 `main` 後，GitHub Actions 自動測試並部署 Pages。
+`pnpm build:pages` 產生 dist-pages，只有導向正式網站的頁面；main 更新後由 GitHub Actions 自動發布轉址。
 
-`pnpm build:site` 產生原 Sites 使用的根路徑版本 `out`。CI 會檢查並保留 `daily-tools-site` 產物；原 Sites 的公開版本仍需透過 Sites 保存版本／發布流程更新，不會因 GitHub 推送就自動更新。
+`pnpm build:site` 產生 out，只有導向正式網站的頁面。原 Sites 透過 Sites 保存／發布流程更新，不再包含工具程式或資料庫。
 
-原 `pnpm dev` / `pnpm build` 的 Vinext 路由保留供後端開發，不是 Cloudflare 的正式建置命令。Cloudflare 與原 Sites 的工具沿用 `#/classroom`、`#/learn`、`#/pos`，並保留 `/classroom`、`/learn`、`/pos`、`/demo` 舊路徑轉接。
+原 `pnpm dev` / `pnpm build` 的 Vinext 路由保留供後端開發，不是 Cloudflare 的正式建置命令。Cloudflare 的工具沿用 `#/classroom`、`#/learn`、`#/pos`，並保留 `/classroom`、`/learn`、`/pos`、`/demo` 舊路徑轉接。
 
 英文 app 原始碼位於相鄰 `../lexiharbor`。在該專案執行 `node scripts/build-web.mjs` 後回來執行 `node scripts/sync-lexiharbor.mjs`，可同步完整靜態輸出及 [來源版本](docs/lexiharbor-source.json)。
 
-29 項自動測試涵蓋班級積分交易、餵養與撤銷、POS 併發結帳及備份、原菜單核對、舊資料升級、GitHub 子路徑與新主機根路徑、API 分流及部署網址驗證。測試使用 fake-indexeddb；不等於實體收銀設備驗收。
+自動測試涵蓋班級交易、POS 併發结帳、原菜單與備份、路徑及 API 分流，以及真實 JWT 簽章、會員建立、登入重放防護、CSRF、session 輪替及登出。資料庫測試使用記憶體 SQLite，工具測試使用 fake-indexeddb。
 
 ## 相關文件
 

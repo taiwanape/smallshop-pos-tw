@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import SuiteApp from './suite-app';
+import { AccountProvider } from '../components/member-account';
 import '../app/globals.css';
 import '../app/suite.css';
 import '../app/neo.css';
@@ -14,6 +15,8 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <SuiteApp />
+    <AccountProvider>
+      <SuiteApp />
+    </AccountProvider>
   </StrictMode>,
 );

@@ -5,6 +5,22 @@
   "compatibility_date": "2026-05-15",
   "workers_dev": true,
   "preview_urls": false,
+  "ratelimits": [
+    {
+      "name": "AUTH_RATE_LIMIT",
+      "namespace_id": "2026090901",
+      "simple": { "limit": 60, "period": 60 },
+    },
+  ],
+  "vars": { "APP_ORIGIN": "https://daily-tools.taiwanape.workers.dev" },
+  "d1_databases": [
+    {
+      "binding": "MEMBERS_DB",
+      "database_name": "daily-tools-members",
+      "database_id": "5e5aff5d-9803-4dce-9a39-fcc4506b1d91",
+      "migrations_dir": "worker/migrations",
+    },
+  ],
   "assets": {
     "directory": "./dist-cloudflare",
     "binding": "ASSETS",

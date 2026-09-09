@@ -7,7 +7,7 @@ export const STATIC_SUITE =
   typeof __SUITE_STATIC__ !== 'undefined' && __SUITE_STATIC__;
 export const SUITE_BASE =
   typeof __SUITE_BASE__ !== 'undefined' ? __SUITE_BASE__ : '/';
-export const SUITE_VERSION = '2026.09.09-cloudflare1';
+export const SUITE_VERSION = '2026.09.09-members1';
 export const SUITE_PUBLIC_URL =
   typeof __SUITE_PUBLIC_URL__ !== 'undefined'
     ? __SUITE_PUBLIC_URL__

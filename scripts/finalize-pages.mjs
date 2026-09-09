@@ -95,6 +95,7 @@ if (targetName === 'cloudflare') {
   Referrer-Policy: strict-origin-when-cross-origin
   Content-Security-Policy: frame-ancestors 'self'; object-src 'none'; base-uri 'self'
   X-Frame-Options: SAMEORIGIN
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
 
 /
   Cache-Control: no-cache

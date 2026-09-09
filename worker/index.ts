@@ -1,6 +1,8 @@
 import { SUITE_VERSION } from '../lib/suite-paths.ts';
+import { authConfigured, handleAuth } from './auth.ts';
+import type { AuthEnv } from './auth.ts';
 
-export interface Env {
+export interface Env extends AuthEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
@@ -34,10 +36,11 @@ export default {
         version: SUITE_VERSION,
         status: 'ok',
         storage: 'browser-local',
-        accounts: false,
+        accounts: authConfigured(env),
         billing: false,
       });
     }
+    if (path.startsWith('/api/auth/')) return handleAuth(request, env);
     // A missing API must never be served the frontend's HTML or a fake success.
     if (path === '/api' || path.startsWith('/api/')) {
       return json(request, { error: 'not_found' }, 404);

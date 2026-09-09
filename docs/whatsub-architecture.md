@@ -28,17 +28,17 @@ flowchart LR
   U[訪客／workers.dev 網址] --> W
   W --> A[三個工具、插圖與語音]
   W --> API[同網域 API]
-  API -. 待實作 .-> ID[Google 登入]
-  API -. 待實作 .-> DB[D1 會員與工具資料]
+  API --> ID[Google 登入]
+  API --> DB[D1 會員與 Session]
   API -. 待實作 .-> PAY[第三方金流]
 ```
 
 - **已上線**：Cloudflare Worker `daily-tools`，公開網址為 <https://daily-tools.taiwanape.workers.dev/>。網站與 API 使用同一個網域，GitHub `main` 已連動自動測試、建置及發布；保留舊工具網址轉接及相容內嵌英文工具的回應標頭。
 - **主機方案**：使用目前帳號的 Workers 免費方案及既有 `workers.dev` 網址，未購買自有網域或付費方案。實際額度與用量以帳號及[官方定價](https://developers.cloudflare.com/workers/platform/pricing/)為準。
-- **尚未實作**：Google／會員登入、雲端資料庫與跨裝置同步、訂閱及收款；尚未設定自有網域。
+- **尚未實作**：工具資料跨裝置同步、訂閱及收款；尚未設定自有網域。Google 會員使用 GIS + D1，設定與啟用查核見 [會員說明](member-auth.md)。
 - **舊資料入口**：[原 Sites](https://smallshop-pos-tw.taiwanape1.chatgpt.site/)及[原 GitHub Pages](https://taiwanape.github.io/smallshop-pos-tw/)維持可用，使用者先回原網址匯出，再到新站手動匯入。
 
-`GET /api/health` 回報主機程式版本及目前仍為本機資料，會員與付款均為 false。其餘未實作 API 回傳 JSON 404，不回傳假成功或首頁 HTML。現有工具不會因為準備新主機而改成上傳使用者資料。
+`GET /api/health` 回報版本、工具資料 browser-local、accounts 是否已設定，以及 billing: false。會員 API 位於 /api/auth/；其他未知 API 回傳 JSON 404。工具資料不因登入而上傳。
 
 ## 現行部署與管理
 
@@ -78,14 +78,14 @@ pnpm deploy:cloudflare
 3. Lexi 的 iframe、字型、圖片與 106 段語音均可載入；不要設定阻擋同源 iframe 的 DENY 或 frame-ancestors 'none'。
 4. release.json 的 commit 必須對應實際發布來源；正式 HTTPS 驗證也會核對 release.url 與首頁 og:url，確認 PUBLIC_SITE_URL 設定正確。
 5. 確認 GitHub `main` 的 commit 與 Cloudflare 發布版本相同；README、GitHub 簡介與公開分享入口使用正式 Cloudflare 網址，舊 Sites／Pages 匯出連結繼續保留。
-6. 若從舊網址轉用新網址，先按[資料搬移說明](hosting-and-migration.md)匯出與匯入；新主機不會自動讀取舊網域的本機資料。
+6. 原 Sites 與 GitHub Pages 只轉址至 Cloudflare，不再運行舊工具介面。
 
 從相同 commit 建置本機 `dist-cloudflare` 後，執行 `node scripts/verify-cloudflare.mjs https://daily-tools.taiwanape.workers.dev/` 驗證正式部署。不帶網址參數時驗證本機 8787 主機。腳本會檢查版本、分享網址、API、8 個舊網址形式、圖片／程式／字型及 106 段語音資源，不會寫入使用者資料；資源 HEAD 檢查通過不等於已驗證瀏覽器互動與實際播放。
 
 ## 後續會員、資料與收款怎麼接
 
-- Google 登入：後端驗證身分，建立自己的使用者 ID 與 HttpOnly session；每次讀寫資料都檢查使用者及所屬店家／班級。未建置完成前不顯示可用的登入或跨裝置同步。
-- D1：作為這個版本的資料庫規劃，保存會員、工具空間與訂閱狀態；工具資料需版本控制、權限隔離及可還原備份。沒有因本文件而建立資料庫或套用任何 schema。
+- Google 登入已實作：後端驗證 Google token，以 sub 建立會員；必要 Cookie 維持登入。詳見 [會員說明](member-auth.md)。
+- D1 保存會員與 session。工具空間、資料同步及訂閱狀態尚未加入；若擴充，需權限隔離與可還原備份。
 - 金流：可評估藍新，需先有自己的商店帳號與正式核准的服務。付款頁交金流商；後端核實通知、處理重複事件、到期與取消，再更新權限。沒有商店設定時不得把按鈕做成「付款成功」。
 - 原五結菜單、班級養成與英文閱讀繼續使用各自的資料模型；這是主機與服務架構調整，不是重寫成字幕工具。
 
