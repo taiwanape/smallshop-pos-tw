@@ -36,6 +36,18 @@ assert.equal(
 );
 assert.equal(release.version, expected.version);
 assert.equal(release.base, '/');
+assert.equal(
+  release.url,
+  expected.url,
+  'Published sharing URL differs from the build',
+);
+if (target.protocol === 'https:') {
+  assert.equal(
+    release.url,
+    target.href,
+    'Set PUBLIC_SITE_URL to the production origin before the final deployment',
+  );
+}
 const home = await request('/');
 assert.equal(home.status, 200);
 const html = await home.text();
@@ -43,6 +55,17 @@ assert.ok(
   html.includes(expected.version) && html.includes('/assets/index-'),
   'Homepage is not the expected app',
 );
+if (expected.url) {
+  assert.ok(
+    html.includes(`<meta property="og:url" content="${expected.url}"`),
+    'Homepage sharing metadata does not match the deployment URL',
+  );
+} else {
+  assert.ok(
+    !html.includes('property="og:url"'),
+    'Unset URL must not be guessed',
+  );
+}
 const healthResponse = await request('/api/health');
 assert.equal(healthResponse.status, 200);
 assert.match(
@@ -53,6 +76,10 @@ assert.equal(healthResponse.headers.get('cache-control'), 'no-store');
 const health = await healthResponse.json();
 assert.equal(health.version, expected.version);
 assert.equal(health.service, 'daily-tools');
+assert.equal(health.status, 'ok');
+assert.equal(health.storage, 'browser-local');
+assert.equal(health.accounts, false);
+assert.equal(health.billing, false);
 for (const path of ['/api', '/api/not-implemented']) {
   const response = await request(path);
   assert.equal(response.status, 404);

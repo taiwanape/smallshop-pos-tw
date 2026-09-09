@@ -34,7 +34,7 @@ flowchart LR
 ```
 
 - **這次已實作**：獨立 Workers 設定、根路徑網站輸出、後端入口與健康狀態 API、舊工具網址轉接、相容內嵌英文工具的回應標頭、GitHub 建置檢查。
-- **尚未啟用**：Cloudflare 線上部署（需要使用者帳號登入）、自有網域（尚未提供）、Google 登入、雲端資料庫、訂閱及收款。
+- **尚未啟用**：Cloudflare 線上部署（Cloudflare 已登入，GitHub 要求本人再次驗證，完成後才能建立 Git 連動）、自有網域（尚未提供）、Google 登入、雲端資料庫、訂閱及收款。
 - **既有網址**：Sites 與 GitHub Pages 維持可用；新主機驗證前不切換對外入口。
 
 `GET /api/health` 回報主機程式版本及目前仍為本機資料，會員與付款均為 false。其餘未實作 API 回傳 JSON 404，不回傳假成功或首頁 HTML。現有工具不會因為準備新主機而改成上傳使用者資料。
@@ -74,7 +74,7 @@ CLI 需要 `wrangler login`，與瀏覽器登入是兩個步驟。OAuth 及密�
 1. 公開訪客可開啟首頁與三個工具；保留 /classroom、/learn、/pos、/demo 舊連結。
 2. /api/health 回傳 JSON、正確版本、no-store；不存在的 API 及 JS／音檔回傳 404。
 3. Lexi 的 iframe、字型、圖片與 106 段語音均可載入；不要設定阻擋同源 iframe 的 DENY 或 frame-ancestors 'none'。
-4. release.json 的 commit 必須對應實際發布來源。
+4. release.json 的 commit 必須對應實際發布來源；正式 HTTPS 驗證也會核對 release.url 與首頁 og:url，確認 PUBLIC_SITE_URL 設定正確。
 5. 核對主機帳號、免費／付費方案狀態及網域後才更新 README、GitHub 簡介與公開分享入口。
 6. 若從舊網址轉用新網址，先按[資料搬移說明](hosting-and-migration.md)匯出與匯入；新主機不會自動讀取舊網域的本機資料。
 
